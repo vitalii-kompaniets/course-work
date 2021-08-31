@@ -8,57 +8,68 @@ const Users = () => {
     setUsers(users.filter((user) => user._id !== userId));
   };
 
-  const renderPhrase = () => {
-    if (users.length === 2 || users.length === 3 || users.length === 4) {
-      return users.length + " человека тусанут с тобой сегодня";
-    } else {
-      return users.length + " человек тусанет с тобой сегодня";
-    }
+  const renderPhrase = (number) => {
+    const lastOne = Number(number.toString().slice(-1));
+    if (number > 4 && number < 15) return "человек тусанет";
+    if ([2, 3, 4].indexOf(lastOne) >= 0) return "человека тусанут";
+    return "человек тусанет";
   };
-
-  // const getBageClasses = () => {
-  //   let classes = "badge bg-"
-  //   if () {
-
-  //   }
-  // }
 
   return (
     <>
-      {renderPhrase()}
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Имя</th>
-            <th>Качества</th>
-            <th>Профессия</th>
-            <th>Встретился, раз</th>
-            <th>Оценка</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((obj) => (
+      <h3>
+        <span
+          className={"badge bg-" + (users.length > 0 ? "primary" : "danger")}
+        >
+          {users.length > 0
+            ? `${users.length} ${renderPhrase(users.length)} с тобой сегодня`
+            : "Никто с тобой не тусанет"}
+        </span>
+      </h3>
+      {users.length > 0 && (
+        <table className="table">
+          <thead>
             <tr>
-              <td key={obj._id}>{obj.name}</td>
-              <td key={obj._id}>
-                <span className="badge bg-primary"></span>
-              </td>
-              <td key={obj._id}>{obj.profession.name}</td>
-              <td key={obj._id}>{obj.completedMeetings}</td>
-              <td key={obj._id}>{obj.rate}</td>
-              <td>
-                <button
-                  onClick={() => handleDelete()}
-                  className="badge bg-danger"
-                >
-                  delete
-                </button>
-              </td>
+              <th>Имя</th>
+              <th>Качества</th>
+              <th>Профессия</th>
+              <th>Встретился, раз</th>
+              <th>Оценка</th>
+              <th></th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {users.map((obj) => (
+              <tr key={obj._id}>
+                <td>{obj.name}</td>
+                <td>
+                  {obj.qualities.map((item) => {
+                    return (
+                      <span
+                        key={item._id}
+                        className={"badge m-1 bg-" + item.color}
+                      >
+                        {item.name}
+                      </span>
+                    );
+                  })}
+                </td>
+                <td>{obj.profession.name}</td>
+                <td>{obj.completedMeetings}</td>
+                <td>{obj.rate}</td>
+                <td>
+                  <button
+                    onClick={() => handleDelete(obj._id)}
+                    className="btn btn-danger"
+                  >
+                    Удалить
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </>
   );
 };
