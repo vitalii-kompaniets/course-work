@@ -1,7 +1,13 @@
 import React, { useState } from "react";
-import User from "./user";
+import api from "../api";
 
-const Users = ({ users, ...rest }) => {
+const Users = () => {
+  const [users, setUsers] = useState(api.users.fetchAll());
+
+  const handleDelete = (userId) => {
+    setUsers(users.filter((user) => user._id !== userId));
+  };
+
   return (
     <table className="table">
       <thead>
@@ -15,11 +21,11 @@ const Users = ({ users, ...rest }) => {
         </tr>
       </thead>
       <tbody>
-        {users.map((obj) => (
-          <tr key={obj._id}>
-            <td>{obj.name}</td>
+        {users.map((user) => (
+          <tr key={user._id}>
+            <td>{user.name}</td>
             <td>
-              {obj.qualities.map((item) => {
+              {user.qualities.map((item) => {
                 return (
                   <span key={item._id} className={"badge m-1 bg-" + item.color}>
                     {item.name}
@@ -27,11 +33,16 @@ const Users = ({ users, ...rest }) => {
                 );
               })}
             </td>
-            <td>{obj.profession.name}</td>
-            <td>{obj.completedMeetings}</td>
-            <td>{obj.rate}</td>
+            <td>{user.profession.name}</td>
+            <td>{user.completedMeetings}</td>
+            <td>{user.rate}</td>
             <td>
-              <button className="btn btn-danger">Удалить</button>
+              <button
+                onClick={() => handleDelete(user._id)}
+                className="btn btn-danger"
+              >
+                Удалить
+              </button>
             </td>
           </tr>
         ))}

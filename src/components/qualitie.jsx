@@ -1,7 +1,7 @@
-import React from "react";
+// import React from "react";
 
-const Qualitie = () => {
-  return <>Qualitie</>;
-};
+// const Qualitie = () => {
+//   return <>Qualitie</>;
+// };
 
-export default Qualitie;
+// export default Qualitie;
