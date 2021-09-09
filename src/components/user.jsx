@@ -4,15 +4,11 @@ import Bookmark from "./bookmark";
 
 const User = ({ user }) => {
   return (
-    <tr key={user._id}>
+    <tr>
       <td>{user.name}</td>
       <td>
         {user.qualities.map((item) => {
-          return (
-            <span key={item._id} className={"badge m-1 bg-" + item.color}>
-              {item.name}
-            </span>
-          );
+          return <Qualitie item={item} key={item._id} />;
         })}
       </td>
       <td>{user.profession.name}</td>
