@@ -1,13 +1,7 @@
-import React, { useState } from "react";
-import api from "../api";
+import React from "react";
+import User from "./user";
 
-const Users = () => {
-  const [users, setUsers] = useState(api.users.fetchAll());
-
-  const handleDelete = (userId) => {
-    setUsers(users.filter((user) => user._id !== userId));
-  };
-
+const Users = ({ users }) => {
   return (
     <table className="table">
       <thead>
@@ -21,31 +15,9 @@ const Users = () => {
         </tr>
       </thead>
       <tbody>
-        {users.map((user) => (
-          <tr key={user._id}>
-            <td>{user.name}</td>
-            <td>
-              {user.qualities.map((item) => {
-                return (
-                  <span key={item._id} className={"badge m-1 bg-" + item.color}>
-                    {item.name}
-                  </span>
-                );
-              })}
-            </td>
-            <td>{user.profession.name}</td>
-            <td>{user.completedMeetings}</td>
-            <td>{user.rate}</td>
-            <td>
-              <button
-                onClick={() => handleDelete(user._id)}
-                className="btn btn-danger"
-              >
-                Удалить
-              </button>
-            </td>
-          </tr>
-        ))}
+        {users.map((user) => {
+          return <User user={user} />;
+        })}
       </tbody>
     </table>
   );
