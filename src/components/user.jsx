@@ -15,6 +15,9 @@ const User = ({ user }) => {
       <td>{user.completedMeetings}</td>
       <td>{user.rate}</td>
       <td>
+        <Bookmark />
+      </td>
+      <td>
         <button onClick={user.onDelete} className="btn btn-danger">
           Удалить
         </button>

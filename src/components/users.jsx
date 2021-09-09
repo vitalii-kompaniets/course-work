@@ -11,6 +11,7 @@ const Users = ({ users }) => {
           <th>Профессия</th>
           <th>Встретился, раз</th>
           <th>Оценка</th>
+          <th>Избранное</th>
           <th></th>
         </tr>
       </thead>
