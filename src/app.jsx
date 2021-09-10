@@ -10,10 +10,14 @@ const App = () => {
     setUsers(users.filter((user) => user._id !== userId));
   };
 
+  const handleToggleBookmark = (id) => {
+    setUsers();
+  };
+
   return (
     <>
       <SearchStatus />
-      <Users users={users} onDelete={() => handleDelete()} />
+      <Users users={users} onDelete={handleDelete} />
     </>
   );
 };
