@@ -2,7 +2,7 @@ import React from "react";
 import Qualitie from "./qualitie";
 import Bookmark from "./bookmark";
 
-const User = ({ user }, handleDelete) => {
+const User = ({ user, handleDelete }) => {
   return (
     <tr>
       <td>{user.name}</td>

@@ -17,7 +17,7 @@ const App = () => {
   return (
     <>
       <SearchStatus />
-      <Users users={users} onDelete={handleDelete} />
+      <Users users={users} handleDelete={handleDelete} />
     </>
   );
 };
