@@ -4,14 +4,14 @@ import { paginate } from "../utils/paginate";
 import Pagination from "./pagination";
 import PropTypes from "prop-types";
 
-const Users = ({ users, handleDelete }) => {
-    const count = users.length;
+const Users = ({ users: allUsers, ...rest }) => {
+    const count = allUsers.length;
     const pageSize = 4;
     const [currentPage, setCurrentPage] = useState(1);
     const handlePageChange = (pageIndex) => {
         setCurrentPage(pageIndex);
     };
-    const userCrop = paginate(users, currentPage, pageSize);
+    const userCrop = paginate(allUsers, currentPage, pageSize);
     return (
         <>
             {count > 0 && (
@@ -29,13 +29,7 @@ const Users = ({ users, handleDelete }) => {
                     </thead>
                     <tbody>
                         {userCrop.map((user) => {
-                            return (
-                                <User
-                                    user={user}
-                                    key={user._id}
-                                    handleDelete={handleDelete}
-                                />
-                            );
+                            return <User {...rest} {...user} key={user._id} />;
                         })}
                     </tbody>
                 </table>
@@ -51,8 +45,7 @@ const Users = ({ users, handleDelete }) => {
 };
 
 Users.propTypes = {
-    users: PropTypes.array,
-    handleDelete: PropTypes.func
+    users: PropTypes.array
 };
 
 export default Users;
