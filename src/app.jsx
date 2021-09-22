@@ -3,9 +3,9 @@ import Users from "./components/users";
 import api from "./api";
 
 const App = () => {
-    const [users, setUsers] = useState();
+    const [users, setUsers] = useState([]);
     useEffect(() => {
-        api.users.fetchAll().then((person) => setUsers(person));
+        api.users.fetchAll().then((data) => setUsers(data));
     }, []);
 
     const handleDelete = (userId) => {
