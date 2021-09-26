@@ -15,7 +15,7 @@ const Users = () => {
     const [sortBy, setSortBy] = useState({ iter: "name", order: "asc" });
     const pageSize = 8;
 
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState();
     useEffect(() => {
         api.users.fetchAll().then((data) => setUsers(data));
     }, []);
@@ -115,7 +115,7 @@ const Users = () => {
             </div>
         );
     }
-    return "loading...";
+    return "Loading...";
 };
 
 Users.propTypes = {
