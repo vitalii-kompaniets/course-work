@@ -19,7 +19,6 @@ const Users = () => {
     useEffect(() => {
         api.users.fetchAll().then((data) => setUsers(data));
     }, []);
-
     const handleDelete = (userId) => {
         setUsers(users.filter((user) => user._id !== userId));
     };
@@ -70,7 +69,6 @@ const Users = () => {
             [sortBy.order]
         );
         const userCrop = paginate(sortedUsers, currentPage, pageSize);
-
         const clearFilter = () => {
             setSelectedProf();
         };
