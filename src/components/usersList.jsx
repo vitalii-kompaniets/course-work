@@ -7,12 +7,14 @@ import UserTable from "./usersTable";
 import api from "../api";
 import _ from "lodash";
 import PropTypes from "prop-types";
+import SearchInput from "./searchInput";
 
 const UsersList = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [professions, setProfession] = useState();
     const [selectedProf, setSelectedProf] = useState();
     const [sortBy, setSortBy] = useState({ iter: "name", order: "asc" });
+    const [data, setData] = useState({ search: "" });
     const pageSize = 8;
 
     const [users, setUsers] = useState();
@@ -42,6 +44,7 @@ const UsersList = () => {
     }, [selectedProf]);
 
     const handleProfessionSelect = (item) => {
+        setData({ search: "" });
         setSelectedProf(item);
     };
 
@@ -53,6 +56,14 @@ const UsersList = () => {
         setSortBy(item);
     };
 
+    const handleChange = ({ target }) => {
+        setSelectedProf();
+        setData((prevState) => ({
+            ...prevState,
+            [target.name]: target.value
+        }));
+    };
+
     if (users) {
         const filteredUsers = selectedProf
             ? users.filter(
@@ -62,16 +73,24 @@ const UsersList = () => {
               )
             : users;
 
-        const count = filteredUsers.length;
+        const searchedUsers = data.search
+            ? users.filter((person) =>
+                  person.name.toLowerCase().includes(data.search)
+              )
+            : users;
+
+        const count = data.search ? searchedUsers.length : filteredUsers.length;
         const sortedUsers = _.orderBy(
             filteredUsers,
             [sortBy.path],
             [sortBy.order]
         );
+
         const userCrop = paginate(sortedUsers, currentPage, pageSize);
         const clearFilter = () => {
             setSelectedProf();
         };
+
         return (
             <div className="d-flex">
                 {professions && (
@@ -92,9 +111,14 @@ const UsersList = () => {
 
                 <div className="d-flex flex-column">
                     <SearchStatus length={count} />
+                    <SearchInput
+                        name="search"
+                        value={data.search}
+                        onChange={handleChange}
+                    />
                     {count > 0 && (
                         <UserTable
-                            users={userCrop}
+                            users={data.search ? searchedUsers : userCrop}
                             onSort={handleSort}
                             selectedSort={sortBy}
                             onDelete={handleDelete}

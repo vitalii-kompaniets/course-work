@@ -6,7 +6,7 @@ const TextField = ({ label, type, name, value, onChange, error }) => {
     const getInputClasses = () => {
         return "form-control" + (error ? " is-invalid" : "");
     };
-    const toogleShowPassword = () => {
+    const toggleShowPassword = () => {
         setShowPassword((prevState) => !prevState);
     };
     return (
@@ -25,7 +25,7 @@ const TextField = ({ label, type, name, value, onChange, error }) => {
                     <button
                         className="btn btn-outline-secondary"
                         type="button"
-                        onClick={toogleShowPassword}
+                        onClick={toggleShowPassword}
                     >
                         <i
                             className={
