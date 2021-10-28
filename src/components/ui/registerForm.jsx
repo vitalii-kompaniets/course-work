@@ -73,7 +73,6 @@ const RegisterForm = () => {
 
     const validate = () => {
         const errors = validator(data, validatorConfig);
-
         setErrors(errors);
         return Object.keys(errors).length === 0;
     };
