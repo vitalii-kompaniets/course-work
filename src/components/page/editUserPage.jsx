@@ -66,9 +66,8 @@ const EditUserPage = () => {
         history.push("/users");
     };
 
-    const qualityIds = data.qualities.map((quality) => quality.value);
-    console.log(qualityIds);
     console.log(person.qualities);
+    console.log(person.profession);
 
     return (
         <div className="container mt-5">
