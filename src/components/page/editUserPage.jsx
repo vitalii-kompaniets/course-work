@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TextField from "../common/form/textField";
 import RadioField from "../common/form/radioField";
+import SelectField from "../common/form/selectField";
+import MultiSelectField from "../common/form/multiSelectField";
 import { useParams, useHistory } from "react-router-dom";
 import { validator } from "../../utils/validator";
+import api from "../../api";
 
 const EditUserPage = () => {
     const history = useHistory();
@@ -16,9 +19,18 @@ const EditUserPage = () => {
     const [data, setData] = useState({
         name: person.name,
         email: person.email,
+        profession: person.profession.name,
+        qualities: person.qualities,
         sex: person.sex
     });
     const [errors, setErrors] = useState({});
+    const [qualities, setQualities] = useState({});
+    const [professions, setProfession] = useState();
+
+    useEffect(() => {
+        api.professions.fetchAll().then((data) => setProfession(data));
+        api.qualities.fetchAll().then((data) => setQualities(data));
+    }, []);
 
     const validatorConfig = {
         email: {
@@ -47,13 +59,16 @@ const EditUserPage = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const isValid = validate();
-        if (isValid) {
-            history.push("/users");
-        } else {
-            return;
-        }
-        console.log(data);
+        if (!isValid) return;
+
+        const updateData = { ...data };
+        api.users.update(person._id, updateData);
+        history.push("/users");
     };
+
+    const qualityIds = data.qualities.map((quality) => quality.value);
+    console.log(qualityIds);
+    console.log(person.qualities);
 
     return (
         <div className="container mt-5">
@@ -74,7 +89,21 @@ const EditUserPage = () => {
                             onChange={handleChange}
                             error={errors.email}
                         />
-
+                        <SelectField
+                            label="Выберите вашу профессию"
+                            defaultOption="Choose..."
+                            options={professions}
+                            value={data.profession}
+                            onChange={handleChange}
+                            error={errors.profession}
+                        />
+                        <MultiSelectField
+                            options={qualities}
+                            value={person.qualities}
+                            onChange={handleChange}
+                            name="qualities"
+                            label="Выберите ваши качества"
+                        />
                         <RadioField
                             options={[
                                 { name: "Male", value: "male" },
