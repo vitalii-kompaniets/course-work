@@ -15,15 +15,20 @@ const UserProvider = ({ children }) => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        getUsers();
-    }, []);
-
-    useEffect(() => {
         if (error !== null) {
             toast(error);
             setError(null);
         }
     }, [error]);
+
+    useEffect(() => {
+        getUsers();
+    }, []);
+
+    function errorCatcher(error) {
+        const { message } = error.response.data;
+        setError(message);
+    }
 
     async function getUsers() {
         try {
@@ -33,11 +38,6 @@ const UserProvider = ({ children }) => {
         } catch (error) {
             errorCatcher(error);
         }
-    }
-
-    function errorCatcher(error) {
-        const { message } = error.response.data;
-        setError(message);
     }
 
     return (
