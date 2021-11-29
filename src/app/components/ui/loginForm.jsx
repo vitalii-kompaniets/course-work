@@ -2,14 +2,41 @@ import React, { useEffect, useState } from "react";
 import { validator } from "../../utils/validator";
 import TextField from "../common/form/textField";
 import CheckBoxField from "../common/form/checkBoxField";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { useHistory } from "react-router";
+
+const httpAuth = axios.create();
 
 const LoginForm = () => {
+    const history = useHistory();
     const [data, setData] = useState({
         email: "",
         password: "",
         stayOn: false
     });
     const [errors, setErrors] = useState({});
+    const [error, setError] = useState(null);
+
+    async function logIn({ email, password }) {
+        const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.REACT_APP_FIREBASE_KEY}`;
+
+        try {
+            const { data } = await httpAuth.post(url, {
+                email,
+                password,
+                returnSecureToken: true
+            });
+            if (data.email === email) {
+                console.log("success");
+                history.push("/");
+            }
+            console.log(data);
+        } catch (error) {
+            errorCatcher(error);
+        }
+    }
+
     const handleChange = (target) => {
         setData((prevState) => ({
             ...prevState,
@@ -17,7 +44,7 @@ const LoginForm = () => {
         }));
     };
 
-    const validatorConfog = {
+    const validatorConfig = {
         email: {
             isRequired: {
                 message: "Электронная почта обязательна для заполнения"
@@ -42,25 +69,41 @@ const LoginForm = () => {
             }
         }
     };
+
     useEffect(() => {
         validate();
     }, [data]);
+
     const validate = () => {
-        const errors = validator(data, validatorConfog);
+        const errors = validator(data, validatorConfig);
 
         setErrors(errors);
         return Object.keys(errors).length === 0;
     };
     const isValid = Object.keys(errors).length === 0;
 
+    useEffect(() => {
+        if (error !== null) {
+            toast(error);
+            setError(null);
+        }
+    }, [error]);
+
+    function errorCatcher(error) {
+        const { message } = error.response.data;
+        setError(message);
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
+        const newData = { ...data };
+        logIn(newData);
         console.log(data);
     };
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} value={{ logIn }}>
             <TextField
                 label="Электронная почта"
                 name="email"
