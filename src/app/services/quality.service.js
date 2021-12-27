@@ -4,8 +4,8 @@ const qualityEndpoint = "quality/";
 
 const qualityService = {
     get: async () => {
-        const req = await httpService.get(qualityEndpoint);
-        return req.data;
+        const { data } = await httpService.get(qualityEndpoint);
+        return data;
     }
 };
 
