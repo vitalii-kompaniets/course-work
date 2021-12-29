@@ -19,9 +19,48 @@ export const CommentsProvider = ({ children }) => {
     const [comments, setComments] = useState([]);
     const [error, setError] = useState(null);
     useEffect(() => {
-        setComments(null);
-        setLoading(false);
-    });
+        getComments();
+    }, [userId]);
+
+    async function createComment(data) {
+        const comment = {
+            ...data,
+            pageId: userId,
+            _id: nanoid(),
+            created_at: Date.now(),
+            userId: currentUser._id
+        };
+        try {
+            const { content } = await commentService.createComment(comment);
+            setComments((prevState) => [...prevState, content]);
+        } catch (error) {
+            errorCatcher(error);
+        }
+    }
+
+    async function getComments() {
+        try {
+            const { content } = await commentService.getComments(userId);
+            setComments(content);
+        } catch (error) {
+            errorCatcher(error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    async function removeComment(id) {
+        try {
+            const { content } = await commentService.removeComment(id);
+            if (content === null) {
+                setComments((prevState) =>
+                    prevState.filter((c) => c._id !== id)
+                );
+            }
+        } catch (error) {
+            errorCatcher(error);
+        }
+    }
 
     useEffect(() => {
         if (error !== null) {
@@ -35,25 +74,9 @@ export const CommentsProvider = ({ children }) => {
         setError(message);
     }
 
-    async function createComment(data) {
-        const comment = {
-            ...data,
-            pageId: userId,
-            _id: nanoid(),
-            created_at: Date.now(),
-            userId: currentUser._id
-        };
-        try {
-            const { content } = await commentService.createComment(comment);
-            console.log(content);
-        } catch (error) {
-            errorCatcher(error);
-        }
-        console.log(comment);
-    }
     return (
         <CommentsContext.Provider
-            value={{ comments, createComment, isLoading }}
+            value={{ comments, createComment, isLoading, removeComment }}
         >
             {children}
         </CommentsContext.Provider>
