@@ -138,7 +138,7 @@ const EditUserPage = () => {
                                 defaultOption="Choose..."
                                 options={professionsList}
                                 onChange={handleChange}
-                                value={data.professions.name}
+                                value={data.profession.name}
                                 error={errors.profession}
                             />
                             <RadioField
