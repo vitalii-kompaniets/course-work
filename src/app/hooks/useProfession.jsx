@@ -2,6 +2,8 @@ import React, { useEffect, useState, useContext } from "react";
 import PropTypes from "prop-types";
 import professionService from "../services/profession.service";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import { getProfessionsById } from "../store/professions";
 
 const ProfessionContext = React.createContext();
 
@@ -12,6 +14,7 @@ export const useProfessions = () => {
 export const ProfessionProvider = ({ children }) => {
     const [isLoading, setLoading] = useState(true);
     const [professions, setProfessions] = useState([]);
+    const professionsList = useSelector(getProfessionsById(id));
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -22,17 +25,13 @@ export const ProfessionProvider = ({ children }) => {
     }, [error]);
 
     useEffect(() => {
-        getProfessionsList();
+        professionsList.find((p) => p._id === id);
     }, []);
 
     function errorCatcher(error) {
         const { message } = error.response.data;
         setError(message);
         setLoading(false);
-    }
-
-    function getProfession(id) {
-        return professions.find((p) => p._id === id);
     }
 
     async function getProfessionsList() {
